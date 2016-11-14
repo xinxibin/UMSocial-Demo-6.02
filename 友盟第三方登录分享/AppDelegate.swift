@@ -15,10 +15,56 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
-        // Override point for customization after application launch.
+        
+        
+        useUMengSocialData()
+        
+        return true
+    }
+    
+    func useUMengSocialData() {
+                
+        UMSocialManager.default().openLog(true)
+        UMSocialManager.default().umSocialAppkey = ""
+        print("Umeng social version : \(UMSocialGlobal.umSocialSDKVersion())")
+
+        // 设置微博的appkey
+        UMSocialManager.default().setPlaform(UMSocialPlatformType.sina, appKey: "", appSecret: "", redirectURL: "http://sns.whalecloud.com/sina2/callback")
+        
+        // 设置qq的appkey
+        UMSocialManager.default().setPlaform(UMSocialPlatformType.QQ, appKey: "", appSecret: "", redirectURL: "http://www.baidu.com")
+        
+        // 设置weixin的appkey
+        UMSocialManager.default().setPlaform(UMSocialPlatformType.wechatSession, appKey: "", appSecret: "", redirectURL: "http://mobile.umeng.com/social")
+
+    }
+    
+    func application(_ app: UIApplication, open url: URL, options: [UIApplicationOpenURLOptionsKey : Any] = [:]) -> Bool {
+        
+        let result = UMSocialManager.default().handleOpen(url)
+        
+        if !result {
+            // 其他如支付等sdk 的回调
+        }
+        
+        return true
+    }
+    
+    func application(_ application: UIApplication, open url: URL, sourceApplication: String?, annotation: Any) -> Bool {
+        let result = UMSocialManager.default().handleOpen(url)
+        
+        if !result {
+            // 其他如支付等sdk 的回调
+        }
+        return true
+    }
+    
+    func canOpenURL(_ url: URL) -> Bool {
+        
         return true
     }
 
+    
     func applicationWillResignActive(_ application: UIApplication) {
         // Sent when the application is about to move from active to inactive state. This can occur for certain types of temporary interruptions (such as an incoming phone call or SMS message) or when the user quits the application and it begins the transition to the background state.
         // Use this method to pause ongoing tasks, disable timers, and invalidate graphics rendering callbacks. Games should use this method to pause the game.
@@ -34,7 +80,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     }
 
     func applicationDidBecomeActive(_ application: UIApplication) {
-        // Restart any tasks that were paused (or not yet started) while the application was inactive. If the application was previously in the background, optionally refresh the user interface.
+
+    
     }
 
     func applicationWillTerminate(_ application: UIApplication) {
